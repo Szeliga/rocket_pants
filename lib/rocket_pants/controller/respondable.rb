@@ -203,8 +203,8 @@ module RocketPants
     # @param [true,false] singular true iff the current object is a singular resource
     def metadata_for(object, options, type, singular)
       {}.tap do |metadata|
-        metadata[:count]      = object.length unless singular
-        metadata[:pagination] = Respondable.extract_pagination(object) if type == :paginated
+        metadata[:count]      = (object.try(:length) or object.try(:count)) unless singular
+        metadata[:pagination] = Respondable.extract_pagination(options[:pagination] || object) if type == :paginated
         metadata.merge! options[:metadata] if options[:metadata]
       end
     end
